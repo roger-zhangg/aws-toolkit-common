@@ -1664,7 +1664,7 @@
             "name": "appTemplateSelected",
             "type": "string",
             "description": "Identifies the template choosen in the Getting Started Walkthrough."
-        },
+        }
     ],
     "metrics": [
         {
