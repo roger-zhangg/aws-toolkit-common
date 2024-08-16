@@ -93,6 +93,11 @@
             "description": "The current state of the App Runner service"
         },
         {
+            "name": "appTemplateChoice",
+            "type": "string",
+            "description": "Identifies the template choosen in the Getting Started Walkthrough."
+        },
+        {
             "name": "artifactsUploadDuration",
             "type": "int",
             "description": "Time taken to fetch the upload URL and upload the artifacts in milliseconds"
@@ -1617,7 +1622,8 @@
                 "dotnet-lambda-deploy",
                 "dotnet-deploy-cli",
                 "aws-cli",
-                "sam-cli"
+                "sam-cli",
+                "docker"
             ]
         },
         {
@@ -2175,6 +2181,154 @@
             ]
         },
         {
+            "name": "app_openLocalInvokeWebView",
+            "description": "Click open Local invoke WebView button in Application Builder",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_openRemoteInvokeWebView",
+            "description": "Click open Remote invoke WebView button in Application Builder",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_openTemplate",
+            "description": "Click open template button in Application Builder",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_walkthroughInstallAwsCli",
+            "description": "Click Install AWS CLI button in Getting Started Walkthrough",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_walkthroughInstallDocker",
+            "description": "Click Install Docker button in Getting Started Walkthrough",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_walkthroughInstallSamcli",
+            "description": "Click Install SAM CLI button in Getting Started Walkthrough",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_walkthroughSelectTemplate",
+            "description": "Select a template and create project in Getting Started Walkthrough",
+            "metadata": [
+                {
+                    "type": "appTemplateChoice",
+                    "required": false
+                },
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "app_walkthroughStart",
+            "description": "Open Getting Started Walkthrough",
+            "metadata": [
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "appcomposer_addConnection",
             "description": "Called when two resources are connected",
             "metadata": [
@@ -2305,6 +2459,10 @@
             "metadata": [
                 {
                     "type": "hasChatAuth"
+                },
+                {
+                    "type": "source",
+                    "required": false
                 }
             ]
         },
@@ -5851,7 +6009,15 @@
             "description": "Jump to a lambda handler from elsewhere",
             "metadata": [
                 {
+                    "type": "reason",
+                    "required": false
+                },
+                {
                     "type": "result"
+                },
+                {
+                    "type": "source",
+                    "required": false
                 }
             ]
         },
@@ -5883,10 +6049,18 @@
                     "type": "lambdaPackageType"
                 },
                 {
+                    "type": "reason",
+                    "required": false
+                },
+                {
                     "type": "result"
                 },
                 {
                     "type": "runtime",
+                    "required": false
+                },
+                {
+                    "type": "source",
                     "required": false
                 },
                 {
@@ -5900,10 +6074,18 @@
             "description": "Called when invoking lambdas remotely",
             "metadata": [
                 {
+                    "type": "reason",
+                    "required": false
+                },
+                {
                     "type": "result"
                 },
                 {
                     "type": "runtime",
+                    "required": false
+                },
+                {
+                    "type": "source",
                     "required": false
                 }
             ]
@@ -6268,11 +6450,40 @@
             ]
         },
         {
+            "name": "sam_build",
+            "description": "Called when building a SAM application",
+            "metadata": [
+                {
+                    "type": "lambdaPackageType",
+                    "required": false
+                },
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "result"
+                },
+                {
+                    "type": "source",
+                    "required": false
+                },
+                {
+                    "type": "version",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "sam_deploy",
             "description": "Called when deploying a SAM application",
             "metadata": [
                 {
                     "type": "result"
+                },
+                {
+                    "type": "source",
+                    "required": false
                 },
                 {
                     "type": "version",
@@ -6349,6 +6560,10 @@
                 },
                 {
                     "type": "result"
+                },
+                {
+                    "type": "source",
+                    "required": false
                 },
                 {
                     "type": "syncedResources"
