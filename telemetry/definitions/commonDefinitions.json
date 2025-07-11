@@ -1,9 +1,24 @@
 {
     "types": [
         {
+            "name": "acceptedCharactersCount",
+            "type": "int",
+            "description": "The number of accepted characters"
+        },
+        {
+            "name": "acceptedCount",
+            "type": "int",
+            "description": "The number of accepted cases"
+        },
+        {
+            "name": "acceptedLinesCount",
+            "type": "int",
+            "description": "The number of accepted lines of code"
+        },
+        {
             "name": "action",
             "type": "string",
-            "description": "Name of an action that was taken, displayed, etc."
+            "description": "Name of an action that was taken, displayed, etc. See also `userChoice`."
         },
         {
             "name": "amazonqCodeGenerationResult",
@@ -41,6 +56,11 @@
             "description": "The time it takes to generate code generation response"
         },
         {
+            "name": "amazonqHistoryFileSize",
+            "type": "int",
+            "description": "The size of a chat history file (in bytes)"
+        },
+        {
             "name": "amazonqNumberOfFilesAccepted",
             "type": "double",
             "description": "Captures the number of accepted files as a part of code generation iteration"
@@ -61,12 +81,24 @@
             "description": "Captures the size of the source code"
         },
         {
+            "name": "amazonqTimeToLoadHistory",
+            "type": "int",
+            "description": "The time (in milliseconds) it takes to load chat history from filesystem"
+        },
+        {
+            "name": "amazonqTimeToSearchHistory",
+            "type": "int",
+            "description": "The time (in milliseconds) it takes to search through all messages in chat history for a user-provided search string"
+        },
+        {
             "name": "amazonqUploadIntent",
             "type": "string",
             "description": "The intent of the upload",
             "allowedValues": [
                 "TRANSFORMATION",
-                "TASK_ASSIST_PLANNING"
+                "TASK_ASSIST_PLANNING",
+                "AUTOMATIC_FILE_SECURITY_SCAN",
+                "FULL_PROJECT_SECURITY_SCAN"
             ]
         },
         {
@@ -133,6 +165,22 @@
             "description": "Status of the an auth connection."
         },
         {
+            "name": "authType",
+            "type": "string",
+            "allowedValues": [
+                "PKCE",
+                "DeviceCode",
+                "IAM",
+                "Unknown"
+            ],
+            "description": "The type of auth flow used for signing in"
+        },
+        {
+            "name": "autoDetected",
+            "type": "boolean",
+            "description": "Whether the code issue was detected by auto-review"
+        },
+        {
             "name": "awsAccount",
             "type": "string",
             "description": "AWS account ID associated with a metric.\n- \"n/a\" if credentials are not available.\n- \"not-set\" if credentials are not selected.\n- \"invalid\" if account ID cannot be obtained."
@@ -168,9 +216,19 @@
             "description": "The amount of time required for the build to complete (in seconds)."
         },
         {
+            "name": "buildPayloadBytes",
+            "type": "int",
+            "description": "The uncompressed payload size in bytes of the source files in customer project context"
+        },
+        {
             "name": "buildSystemVersion",
             "type": "string",
             "description": "The build system version on the user's machine"
+        },
+        {
+            "name": "buildZipFileBytes",
+            "type": "int",
+            "description": "The compressed payload size of source files in bytes of customer project context sent"
         },
         {
             "name": "causedBy",
@@ -244,6 +302,17 @@
             "allowedValues": [
                 "remote",
                 "local"
+            ]
+        },
+        {
+            "name": "codeFixAction",
+            "type": "string",
+            "description": "Captures the type of fix that was accepted",
+            "allowedValues": [
+                "openDiff",
+                "insertAtCursor",
+                "copyDiff",
+                "applyFix"
             ]
         },
         {
@@ -374,9 +443,8 @@
             "allowedValues": [
                 "NoPom",
                 "NoJavaProject",
-                "MixedLanguages",
                 "UnsupportedJavaVersion",
-                "ProjectJDKDiffersFromBuildSystemJDK",
+                "JavaDowngradeAttempt",
                 "UnsupportedBuildSystem",
                 "EmptyProject",
                 "NonSsoLogin",
@@ -419,16 +487,6 @@
             "description": "Represents the IDE session from which users start the transformation process"
         },
         {
-            "name": "codeTransformStartSrcComponents",
-            "type": "string",
-            "description": "Names of components that can start a transformation",
-            "allowedValues": [
-                "devToolsStartButton",
-                "bottomPanelSideNavButton",
-                "chatPrompt"
-            ]
-        },
-        {
             "name": "codeTransformStatus",
             "type": "string",
             "description": "The current transformation job's status"
@@ -447,17 +505,6 @@
             "name": "codeTransformUploadId",
             "type": "string",
             "description": "A unique upload ID for S3"
-        },
-        {
-            "name": "codeTransformVCSViewerSrcComponents",
-            "type": "string",
-            "description": "Names of components that can initiate the diff viewer",
-            "allowedValues": [
-                "chat",
-                "toastNotification",
-                "treeView",
-                "treeViewHeader"
-            ]
         },
         {
             "name": "codewhispererAcceptedTokens",
@@ -543,6 +590,8 @@
             "description": "The scope of the security scan being performed",
             "allowedValues": [
                 "FILE",
+                "FILE_AUTO",
+                "FILE_ON_DEMAND",
                 "PROJECT"
             ]
         },
@@ -632,6 +681,7 @@
             "type": "string",
             "description": "Programming language of the CodeWhisperer recommendation",
             "allowedValues": [
+                "abap",
                 "c",
                 "cpp",
                 "csharp",
@@ -864,6 +914,11 @@
             "description": "The user group identifier we assign to the customer and it should be unique identifier across different IDE platforms, i.e. Classifier, CrossFile etc."
         },
         {
+            "name": "command",
+            "type": "string",
+            "description": "The command of an operation"
+        },
+        {
             "name": "component",
             "type": "string",
             "allowedValues": [
@@ -874,7 +929,8 @@
                 "infobar",
                 "hover",
                 "webview",
-                "quickfix"
+                "quickfix",
+                "tree"
             ],
             "description": "The IDE or OS component used for the action. (Examples: S3 download to filesystem, S3 upload from editor, ...).  See also `featureId` for specific feature names, `module` for low-level modules, and `resourceType`."
         },
@@ -938,6 +994,18 @@
             ]
         },
         {
+            "name": "cwsprAgenticChatInteractionType",
+            "type": "string",
+            "allowedValues": [
+                "RejectDiff",
+                "GeneratedDiff",
+                "RunCommand",
+                "GeneratedCommand",
+                "StopChat"
+            ],
+            "description": "Type of interaction with agentic chat messages"
+        },
+        {
             "name": "cwsprChatAcceptedCharactersLength",
             "type": "int",
             "description": "Count of code characters copied to the editor"
@@ -948,14 +1016,116 @@
             "description": "Count of lines of code copied to the editor"
         },
         {
+            "name": "cwsprChatActiveEditorImportCount",
+            "type": "int",
+            "description": "Number of import statements in the active editor"
+        },
+        {
+            "name": "cwsprChatActiveEditorTotalCharacters",
+            "type": "int",
+            "description": "Total number of characters in the active editor"
+        },
+        {
             "name": "cwsprChatCodeBlockIndex",
             "type": "int",
             "description": "Index of the code block inside a message in the conversation."
         },
         {
+            "name": "cwsprChatCodeContextCount",
+            "type": "int",
+            "description": "Number of code symbols added to context"
+        },
+        {
+            "name": "cwsprChatCodeContextLength",
+            "type": "int",
+            "description": "Total length of code symbols added to context"
+        },
+        {
+            "name": "cwsprChatCodeContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of code symbols added to context"
+        },
+        {
             "name": "cwsprChatConversationId",
             "type": "string",
             "description": "Uniquely identifies a message with which the user interacts."
+        },
+        {
+            "name": "cwsprChatConversationType",
+            "type": "string",
+            "allowedValues": [
+                "Chat",
+                "Assign",
+                "Transform",
+                "AgenticChat",
+                "AgenticChatWithToolUse"
+            ],
+            "description": "Identifies the type of conversation"
+        },
+        {
+            "name": "cwsprChatFileContextCount",
+            "type": "int",
+            "description": "Number of files manually added to context"
+        },
+        {
+            "name": "cwsprChatFileContextLength",
+            "type": "int",
+            "description": "Total length of files added to context"
+        },
+        {
+            "name": "cwsprChatFileContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of files added to context"
+        },
+        {
+            "name": "cwsprChatFocusFileContextLength",
+            "type": "int",
+            "description": "Total length of current focus file added to context"
+        },
+        {
+            "name": "cwsprChatFocusFileContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of current focus file added to context"
+        },
+        {
+            "name": "cwsprChatFolderContextCount",
+            "type": "int",
+            "description": "Number of folders manually added to context"
+        },
+        {
+            "name": "cwsprChatFollowUpCount",
+            "type": "int",
+            "description": "Number of follow ups in response"
+        },
+        {
+            "name": "cwsprChatFullDisplayLatency",
+            "type": "int",
+            "description": "The time between the user pressing enter and the entire response being rendered"
+        },
+        {
+            "name": "cwsprChatFullResponseLatency",
+            "type": "int",
+            "description": "The time between when the conversation id was created and the final response from the server was received"
+        },
+        {
+            "name": "cwsprChatFullServerResponseLatency",
+            "type": "int",
+            "description": "The time between the initial server request, including creating the conversation id, and the final response from the server"
+        },
+        {
+            "name": "cwsprChatHasCodeSnippet",
+            "type": "boolean",
+            "description": "true if user has selected code snippet, false otherwise."
+        },
+        {
+            "name": "cwsprChatHasContextList",
+            "type": "boolean",
+            "description": "true if context list is displayed to user"
+        },
+        {
+            "name": "cwsprChatHasProjectContext",
+            "type": "boolean",
+            "description": "true if query has project level context, false otherwise."
         },
         {
             "name": "cwsprChatHasReference",
@@ -970,6 +1140,7 @@
         {
             "name": "cwsprChatInteractionType",
             "allowedValues": [
+                "acceptDiff",
                 "insertAtCursor",
                 "copySnippet",
                 "copy",
@@ -982,7 +1153,7 @@
                 "viewDiff"
             ],
             "type": "string",
-            "description": "Indicates the specific interaction type with a message in a conversation"
+            "description": "(Deprecated, use `interactionType` instead.) User interaction type, especially for AI-related features."
         },
         {
             "name": "cwsprChatMessageId",
@@ -990,9 +1161,129 @@
             "description": "Unique identifier for each message in an conversation"
         },
         {
+            "name": "cwsprChatProgrammingLanguage",
+            "type": "string",
+            "description": "Programming language associated with the message"
+        },
+        {
+            "name": "cwsprChatProjectContextQueryMs",
+            "type": "int",
+            "description": "query latency in ms for local project context"
+        },
+        {
+            "name": "cwsprChatPromptContextCount",
+            "type": "int",
+            "description": "Number of saved prompts manually added to context"
+        },
+        {
+            "name": "cwsprChatPromptContextLength",
+            "type": "int",
+            "description": "Total length of saved prompts added to context"
+        },
+        {
+            "name": "cwsprChatPromptContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of saved prompts added to context"
+        },
+        {
+            "name": "cwsprChatReferencesCount",
+            "type": "int",
+            "description": "Number of references in response"
+        },
+        {
+            "name": "cwsprChatRequestLength",
+            "type": "int",
+            "description": "Number of characters in request"
+        },
+        {
+            "name": "cwsprChatResponseCode",
+            "type": "int",
+            "description": "HTTP response code for message API invocation"
+        },
+        {
+            "name": "cwsprChatResponseCodeSnippetCount",
+            "type": "int",
+            "description": "Number of code snippets in response"
+        },
+        {
+            "name": "cwsprChatResponseErrorReason",
+            "type": "string",
+            "description": "Client error reason when processing response stream"
+        },
+        {
+            "name": "cwsprChatResponseLength",
+            "type": "int",
+            "description": "Number of characters in response"
+        },
+        {
+            "name": "cwsprChatRuleContextCount",
+            "type": "int",
+            "description": "Number of workspace rules automatically added to context"
+        },
+        {
+            "name": "cwsprChatRuleContextLength",
+            "type": "int",
+            "description": "Total length of workspace rules added to context"
+        },
+        {
+            "name": "cwsprChatRuleContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of workspace rules added to context"
+        },
+        {
+            "name": "cwsprChatSourceLinkCount",
+            "type": "int",
+            "description": "Number of links in response"
+        },
+        {
+            "name": "cwsprChatTimeBetweenChunks",
+            "type": "string",
+            "description": "An array of time when successive chunks of data are received from the server"
+        },
+        {
+            "name": "cwsprChatTimeBetweenDisplays",
+            "type": "string",
+            "description": "An array of time when successive chunks of server responses are displayed to the user"
+        },
+        {
+            "name": "cwsprChatTimeToFirstChunk",
+            "type": "int",
+            "description": "The time between when the conversation id was created and when we got back the first usable result"
+        },
+        {
+            "name": "cwsprChatTimeToFirstDisplay",
+            "type": "int",
+            "description": "The time between the user pressing enter and when the first chunk of data is displayed to the user"
+        },
+        {
+            "name": "cwsprChatTimeToFirstUsableChunk",
+            "type": "int",
+            "description": "The time between the initial server request, including creating the conversation id, and the first usable result"
+        },
+        {
             "name": "cwsprChatTotalCodeBlocks",
             "type": "int",
             "description": "Total number of code blocks inside a message in the conversation."
+        },
+        {
+            "name": "cwsprChatTriggerInteraction",
+            "type": "string",
+            "allowedValues": [
+                "hotkeys",
+                "click",
+                "contextMenu"
+            ],
+            "description": "Identifies the specific interaction that opens the chat panel"
+        },
+        {
+            "name": "cwsprChatUserInputContextLength",
+            "type": "int",
+            "description": "Total length of user inputs added to context"
+        },
+        {
+            "name": "cwsprChatUserInputContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of user inputs added to context"
         },
         {
             "name": "cwsprChatUserIntent",
@@ -1008,6 +1299,26 @@
                 "generateUnitTests"
             ],
             "description": "Explict user intent associated with a chat message"
+        },
+        {
+            "name": "cwsprChatWorkspaceContextLength",
+            "type": "int",
+            "description": "Total length of workspace context"
+        },
+        {
+            "name": "cwsprChatWorkspaceContextTruncatedLength",
+            "type": "int",
+            "description": "Truncated length of workspace context"
+        },
+        {
+            "name": "cwsprToolName",
+            "type": "string",
+            "description": "Client side tool/s name (ex: fsWrite, executeBash)"
+        },
+        {
+            "name": "cwsprToolUseId",
+            "type": "string",
+            "description": "The id/s when a client side tool/s is used."
         },
         {
             "name": "databaseCredentials",
@@ -1109,7 +1420,8 @@
                 "remoteDesktop",
                 "ssh",
                 "scp",
-                "ssm"
+                "ssm",
+                "remoteWorkspace"
             ],
             "description": "Ways to connect to an EC2 Instance"
         },
@@ -1206,6 +1518,8 @@
             "description": "The id of the feature the user is interacting in. See also: `component`, `featureId`, `module`, `resourceType`.",
             "allowedValues": [
                 "amazonQ",
+                "amazonQTest",
+                "amazonQReview",
                 "awsExplorer",
                 "awsToolkit",
                 "codewhisperer",
@@ -1228,6 +1542,16 @@
             "description": "Filename extension (examples: .txt, .yml, .yaml, .asl.yaml, ...), or empty string if the filename does not contain dot (.) between two chars."
         },
         {
+            "name": "filterType",
+            "type": "string",
+            "allowedValues": [
+                "all",
+                "prefix",
+                "specific"
+            ],
+            "description": "Type of filter applied"
+        },
+        {
             "name": "findingId",
             "type": "string",
             "description": "The id of a security finding from a code scan"
@@ -1246,6 +1570,21 @@
             "name": "framework",
             "type": "string",
             "description": "Application framework being used"
+        },
+        {
+            "name": "generatedCharactersCount",
+            "type": "int",
+            "description": "Number of characters of code generated"
+        },
+        {
+            "name": "generatedCount",
+            "type": "int",
+            "description": "The number of generated cases"
+        },
+        {
+            "name": "generatedLinesCount",
+            "type": "int",
+            "description": "The number of generated lines of code"
         },
         {
             "name": "generateFailure",
@@ -1271,6 +1610,11 @@
             "description": "A time based filter was used"
         },
         {
+            "name": "hasUserPromptSupplied",
+            "type": "boolean",
+            "description": "True if user supplied prompt message as input else false"
+        },
+        {
             "name": "httpMethod",
             "type": "string",
             "description": "Any valid HTTP method (GET/HEAD/etc)"
@@ -1279,6 +1623,11 @@
             "name": "httpStatusCode",
             "type": "string",
             "description": "HTTP status code for the request (if any) associated with a metric."
+        },
+        {
+            "name": "iac",
+            "type": "string",
+            "description": "The IaC being used"
         },
         {
             "name": "iamResourceType",
@@ -1349,6 +1698,24 @@
             "description": "User-selected time range type while starting an insights query"
         },
         {
+            "name": "interactionType",
+            "type": "string",
+            "description": "User interaction, especially for AI-related features.",
+            "allowedValues": [
+                "acceptDiff",
+                "insertAtCursor",
+                "copySnippet",
+                "copy",
+                "clickLink",
+                "clickFollowUp",
+                "hoverReference",
+                "upvote",
+                "downvote",
+                "clickBodyLink",
+                "viewDiff"
+            ]
+        },
+        {
             "name": "invalidInputFields",
             "type": "string",
             "description": "Comma delimited list of input fields that user has invalid inputs typed. e.g. 'profileName,accessKey,startUrl'"
@@ -1359,6 +1726,16 @@
             "description": "Whether this was an individual point or an aggregation of points."
         },
         {
+            "name": "isCodeBlockSelected",
+            "type": "boolean",
+            "description": "True if user selected code snippet as input else false"
+        },
+        {
+            "name": "isFileInWorkspace",
+            "type": "boolean",
+            "description": "Indicate if the file is in the current workspace."
+        },
+        {
             "name": "isReAuth",
             "type": "boolean",
             "description": "If this was performed as part of the reauthentication flow."
@@ -1367,6 +1744,21 @@
             "name": "isRetry",
             "type": "boolean",
             "description": "Whether or not the operation was a retry"
+        },
+        {
+            "name": "isSupportedLanguage",
+            "type": "boolean",
+            "description": "Indicate if the language is supported"
+        },
+        {
+            "name": "jobGroup",
+            "type": "string",
+            "description": "Job group name used in the operation"
+        },
+        {
+            "name": "jobId",
+            "type": "string",
+            "description": "Job id used in the operation"
         },
         {
             "name": "lambdaArchitecture",
@@ -1392,6 +1784,41 @@
             "description": "Language used for the project."
         },
         {
+            "name": "languageServerLocation",
+            "type": "string",
+            "allowedValues": [
+                "cache",
+                "remote",
+                "fallback",
+                "override"
+            ],
+            "description": "The location of the language server"
+        },
+        {
+            "name": "languageServerSetupStage",
+            "type": "string",
+            "allowedValues": [
+                "getManifest",
+                "getServer",
+                "validate",
+                "launch",
+                "handshake",
+                "initialized",
+                "all"
+            ],
+            "description": "The stage of the LSP setup process"
+        },
+        {
+            "name": "languageServerVersion",
+            "type": "string",
+            "description": "The version of the language server"
+        },
+        {
+            "name": "latency",
+            "type": "string",
+            "description": "latency/s from any operation or an execution such as LLM response time."
+        },
+        {
             "name": "loadFileTime",
             "type": "int",
             "description": "Time from opening Composer to loading the file"
@@ -1400,6 +1827,21 @@
             "name": "locale",
             "type": "string",
             "description": "User locale. Examples: en-US, en-GB, etc."
+        },
+        {
+            "name": "manifestLocation",
+            "type": "string",
+            "allowedValues": [
+                "cache",
+                "remote",
+                "override"
+            ],
+            "description": "The location of the manifest"
+        },
+        {
+            "name": "manifestSchemaVersion",
+            "type": "string",
+            "description": "The version of the manifest schema file"
         },
         {
             "name": "metricId",
@@ -1427,14 +1869,49 @@
             "description": "Comma delimited list of NEW enabled auth connections"
         },
         {
+            "name": "numActiveServers",
+            "type": "int",
+            "description": "Number of servers active"
+        },
+        {
             "name": "numAttempts",
             "type": "int",
             "description": "Number of generations before the user accepted or rejected"
         },
         {
+            "name": "numGlobalServers",
+            "type": "int",
+            "description": "Number of servers in global json"
+        },
+        {
+            "name": "numProjectServers",
+            "type": "int",
+            "description": "Number of servers in project level json."
+        },
+        {
+            "name": "numTools",
+            "type": "int",
+            "description": "Number of tools in the operation"
+        },
+        {
+            "name": "numToolsAlwaysAllowed",
+            "type": "int",
+            "description": "Number of tools across servers has configuration as alwaysAllowed."
+        },
+        {
+            "name": "numToolsDenied",
+            "type": "int",
+            "description": "Number of tools across servers has configuration as denied."
+        },
+        {
             "name": "oldVersion",
             "type": "string",
             "description": "The old version of something. Useful when updating dependent resources."
+        },
+        {
+            "name": "openTabCount",
+            "type": "int",
+            "description": "The number of tabs automatically opened from history"
         },
         {
             "name": "parentId",
@@ -1450,6 +1927,21 @@
             "name": "pathsScrubbed",
             "type": "int",
             "description": "Number of generation paths modified"
+        },
+        {
+            "name": "perfClientLatency",
+            "type": "double",
+            "description": "The time duration in milliseconds to process an action on the client side"
+        },
+        {
+            "name": "perfE2ELatency",
+            "type": "double",
+            "description": "The time duration in milliseconds to complete an end to end flow"
+        },
+        {
+            "name": "perfServerLatency",
+            "type": "double",
+            "description": "The time duration in milliseconds to finish a request to the server side"
         },
         {
             "name": "platform",
@@ -1490,6 +1982,16 @@
             "name": "requestId",
             "type": "string",
             "description": "Request ID (if any) associated with a metric. For example, an event with `requestServiceType: s3` means that the request ID is associated with an S3 API call. Events that cover multiple API calls should use the request ID of the most recent call."
+        },
+        {
+            "name": "requestId2",
+            "type": "string",
+            "description": "A special token that is used together with the request ID header to help AWS troubleshoot problems. For example, this has to be provided with requestId when debugging S3 upload errors."
+        },
+        {
+            "name": "requestIds",
+            "type": "string",
+            "description": "Request ids (comma-separated) associated with a task or action, in chronological order. For example 'id1,id2,id3'"
         },
         {
             "name": "requestServiceType",
@@ -1571,9 +2073,15 @@
             "type": "string",
             "allowedValues": [
                 "MANUAL_SAVE",
-                "AUTO_SAVE"
+                "AUTO_SAVE",
+                "AUTO_SYNC"
             ],
             "description": "Type of save executed"
+        },
+        {
+            "name": "scenario",
+            "type": "string",
+            "description": "Scenarios to count in telemetry"
         },
         {
             "name": "schemaLanguage",
@@ -1586,9 +2094,19 @@
             "description": "Languages targeted by the schemas service"
         },
         {
+            "name": "scope",
+            "type": "string",
+            "description": "scope of the operation/config can be a global or workspace level scope."
+        },
+        {
             "name": "serviceType",
             "type": "string",
             "description": "The name of the AWS service acted on. These values come from the AWS SDK. To find them in the JAVA SDK search for SERVICE_NAME in each service client, or look for serviceId in metadata in the service2.json"
+        },
+        {
+            "name": "sessionAlreadyStarted",
+            "type": "boolean",
+            "description": "Session already open that matches new request"
         },
         {
             "name": "sessionDuration",
@@ -1608,7 +2126,7 @@
         {
             "name": "source",
             "type": "string",
-            "description": "The source of the operation"
+            "description": "The source of the operation. This answers 'who' caused/triggered the operation. Example: did an Auth signout happen because of some expiration or since the user explicitly clicked the signout button."
         },
         {
             "name": "sourceFacetType",
@@ -1640,6 +2158,17 @@
             "description": "Date/time that an SSO client registration expires."
         },
         {
+            "name": "status",
+            "type": "string",
+            "allowedValues": [
+                "ACCEPTED",
+                "CANCELLED",
+                "FAILED",
+                "REJECTED"
+            ],
+            "description": "This field helps to emit the status of the operation."
+        },
+        {
             "name": "successCount",
             "type": "int",
             "description": "The number of successful operations"
@@ -1654,9 +2183,19 @@
             ]
         },
         {
+            "name": "target",
+            "type": "string",
+            "description": "The target of the operation"
+        },
+        {
             "name": "templateName",
             "type": "string",
             "description": "Generic name of a template"
+        },
+        {
+            "name": "toolCallLatency",
+            "type": "string",
+            "description": "latency/s from any operation or an execution like tool execution."
         },
         {
             "name": "toolId",
@@ -1682,6 +2221,14 @@
             "description": "Unique identifier for the trace (a set of events) this metric belongs to"
         },
         {
+            "name": "transportType",
+            "type": "string",
+            "allowedValues": [
+                "stdio"
+            ],
+            "description": "Transport type of the MCP server"
+        },
+        {
             "name": "update",
             "type": "boolean",
             "description": "If the operation was an update or not"
@@ -1694,7 +2241,7 @@
         {
             "name": "userChoice",
             "type": "string",
-            "description": "User selection from a predefined menu (not user-provided input)"
+            "description": "User selection from a predefined menu (not user-provided input). See also `action`."
         },
         {
             "name": "userId",
@@ -1780,6 +2327,207 @@
             ]
         },
         {
+            "name": "amazonq_addMessage",
+            "description": "When a message is added to the conversation",
+            "metadata": [
+                {
+                    "type": "codewhispererCustomizationArn",
+                    "required": false
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatActiveEditorImportCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatActiveEditorTotalCharacters",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatCodeContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatCodeContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatCodeContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatConversationId"
+                },
+                {
+                    "type": "cwsprChatConversationType"
+                },
+                {
+                    "type": "cwsprChatFileContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFileContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFileContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFocusFileContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFocusFileContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFolderContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFollowUpCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFullDisplayLatency",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFullResponseLatency"
+                },
+                {
+                    "type": "cwsprChatFullServerResponseLatency",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatHasCodeSnippet",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatHasContextList",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatHasProjectContext",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatMessageId"
+                },
+                {
+                    "type": "cwsprChatProgrammingLanguage",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatProjectContextQueryMs",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatPromptContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatPromptContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatPromptContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatReferencesCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatRequestLength"
+                },
+                {
+                    "type": "cwsprChatResponseCode"
+                },
+                {
+                    "type": "cwsprChatResponseCodeSnippetCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatResponseLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatRuleContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatRuleContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatRuleContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatSourceLinkCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTimeBetweenChunks"
+                },
+                {
+                    "type": "cwsprChatTimeBetweenDisplays",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTimeToFirstChunk"
+                },
+                {
+                    "type": "cwsprChatTimeToFirstDisplay",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTimeToFirstUsableChunk",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTriggerInteraction"
+                },
+                {
+                    "type": "cwsprChatUserInputContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatUserInputContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatUserIntent",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatWorkspaceContextLength",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatWorkspaceContextTruncatedLength",
+                    "required": false
+                },
+                {
+                    "type": "enabled",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "requestIds",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "amazonq_approachInvoke",
             "description": "Captures Approach generation process",
             "metadata": [
@@ -1814,34 +2562,6 @@
                 },
                 {
                     "type": "result",
-                    "required": false
-                }
-            ]
-        },
-        {
-            "name": "amazonq_approachThumbsDown",
-            "description": "User clicked on the thumbs down button to say that they are unsatisfied",
-            "unit": "Count",
-            "metadata": [
-                {
-                    "type": "amazonqConversationId"
-                },
-                {
-                    "type": "credentialStartUrl",
-                    "required": false
-                }
-            ]
-        },
-        {
-            "name": "amazonq_approachThumbsUp",
-            "description": "User clicked on the thumbs up button, to mention that they are satisfied",
-            "unit": "Count",
-            "metadata": [
-                {
-                    "type": "amazonqConversationId"
-                },
-                {
-                    "type": "credentialStartUrl",
                     "required": false
                 }
             ]
@@ -1971,6 +2691,10 @@
                     "required": false
                 },
                 {
+                    "type": "requestId2",
+                    "required": false
+                },
+                {
                     "type": "requestServiceType",
                     "required": false
                 },
@@ -1993,6 +2717,76 @@
                 },
                 {
                     "type": "credentialStartUrl",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_exportTab",
+            "description": "When a user exports the current Amazon Q chat tab",
+            "metadata": [
+                {
+                    "type": "filenameExt",
+                    "required": true
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_feedback",
+            "description": "When a user gives feedback using vote or comment or rating in the conversation",
+            "metadata": [
+                {
+                    "type": "amazonqConversationId",
+                    "required": false
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "featureId"
+                },
+                {
+                    "type": "interactionType",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_interactWithAgenticChat",
+            "description": "When a user interacts with a message in the agentic chat",
+            "metadata": [
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprAgenticChatInteractionType"
+                },
+                {
+                    "type": "cwsprChatConversationId"
+                },
+                {
+                    "type": "cwsprChatConversationType"
+                },
+                {
+                    "type": "cwsprToolUseId",
+                    "required": false
+                },
+                {
+                    "type": "enabled",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "requestIds",
                     "required": false
                 }
             ]
@@ -2022,6 +2816,18 @@
                     "required": true
                 },
                 {
+                    "type": "cwsprChatFileContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatFolderContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatHasProjectContext",
+                    "required": false
+                },
+                {
                     "type": "cwsprChatHasReference",
                     "required": false
                 },
@@ -2038,7 +2844,69 @@
                     "required": true
                 },
                 {
+                    "type": "cwsprChatProgrammingLanguage",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatPromptContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatRuleContextCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTotalCodeBlocks",
+                    "required": false
+                },
+                {
                     "type": "cwsprChatUserIntent",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_invokeLLM",
+            "description": "This metric is emitted per LLM call in the agentic loop with or without tool execution.",
+            "metadata": [
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatConversationId"
+                },
+                {
+                    "type": "cwsprChatConversationType"
+                },
+                {
+                    "type": "cwsprChatTimeBetweenChunks",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTimeToFirstChunk",
+                    "required": false
+                },
+                {
+                    "type": "cwsprToolName"
+                },
+                {
+                    "type": "cwsprToolUseId"
+                },
+                {
+                    "type": "enabled",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "latency",
+                    "required": false
+                },
+                {
+                    "type": "toolCallLatency",
                     "required": false
                 }
             ]
@@ -2112,6 +2980,162 @@
             ]
         },
         {
+            "name": "amazonq_loadHistory",
+            "description": "When a history file is loaded from the filesystem and open tabs are restored",
+            "metadata": [
+                {
+                    "type": "amazonqHistoryFileSize",
+                    "required": true
+                },
+                {
+                    "type": "amazonqTimeToLoadHistory",
+                    "required": true
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "openTabCount",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "amazonq_mcpConfig",
+            "description": "This metric is emitted per reload of an IDE or reinitizalize of a mcp server",
+            "metadata": [
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "numActiveServers",
+                    "required": false
+                },
+                {
+                    "type": "numGlobalServers",
+                    "required": false
+                },
+                {
+                    "type": "numProjectServers",
+                    "required": false
+                },
+                {
+                    "type": "numToolsAlwaysAllowed",
+                    "required": false
+                },
+                {
+                    "type": "numToolsDenied",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_mcpServerInit",
+            "description": "This metric is emitted per mcp server name when user reloads an IDE or does any CRUD operation on mcp config.",
+            "metadata": [
+                {
+                    "type": "command",
+                    "required": false
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "enabled",
+                    "required": false
+                },
+                {
+                    "type": "initializeTime",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "numTools",
+                    "required": false
+                },
+                {
+                    "type": "scope",
+                    "required": false
+                },
+                {
+                    "type": "source",
+                    "required": false
+                },
+                {
+                    "type": "transportType",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_messageResponseError",
+            "description": "When an error has occured in response to a prompt",
+            "metadata": [
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatActiveEditorImportCount",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatActiveEditorTotalCharacters",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatConversationId",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatConversationType"
+                },
+                {
+                    "type": "cwsprChatHasCodeSnippet",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatProgrammingLanguage",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatRequestLength"
+                },
+                {
+                    "type": "cwsprChatResponseCode"
+                },
+                {
+                    "type": "cwsprChatResponseErrorReason",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatTriggerInteraction"
+                },
+                {
+                    "type": "cwsprChatUserIntent",
+                    "required": false
+                },
+                {
+                    "type": "enabled",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "amazonq_modifySourceFolder",
             "description": "User modified source folder",
             "metadata": [
@@ -2128,6 +3152,32 @@
                 },
                 {
                     "type": "result",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_performChatHistoryAction",
+            "description": "When a user searches, exports, opens, or deletes a conversation from history",
+            "metadata": [
+                {
+                    "type": "action",
+                    "required": true
+                },
+                {
+                    "type": "amazonqHistoryFileSize",
+                    "required": false
+                },
+                {
+                    "type": "amazonqTimeToSearchHistory",
+                    "required": false
+                },
+                {
+                    "type": "filenameExt",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
                     "required": false
                 }
             ]
@@ -2162,6 +3212,223 @@
                 },
                 {
                     "type": "result",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_toolUseSuggested",
+            "description": "When the LLM either used a tool directly (no acceptance needed) or suggested a tool (user acceptance required)",
+            "metadata": [
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatConversationId"
+                },
+                {
+                    "type": "cwsprChatConversationType"
+                },
+                {
+                    "type": "cwsprToolName"
+                },
+                {
+                    "type": "cwsprToolUseId"
+                },
+                {
+                    "type": "enabled",
+                    "required": false
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "perfE2ELatency",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_unitTestGeneration",
+            "description": "Client side invocation of the Amazon Q Unit Test Generation with build and execute loop",
+            "metadata": [
+                {
+                    "type": "acceptedCharactersCount",
+                    "required": false
+                },
+                {
+                    "type": "acceptedCount",
+                    "required": false
+                },
+                {
+                    "type": "acceptedLinesCount",
+                    "required": false
+                },
+                {
+                    "type": "artifactsUploadDuration",
+                    "required": false
+                },
+                {
+                    "type": "buildZipFileBytes",
+                    "required": false
+                },
+                {
+                    "type": "count",
+                    "required": false
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatProgrammingLanguage"
+                },
+                {
+                    "type": "generatedCharactersCount",
+                    "required": false
+                },
+                {
+                    "type": "generatedCount",
+                    "required": false
+                },
+                {
+                    "type": "generatedLinesCount",
+                    "required": false
+                },
+                {
+                    "type": "hasUserPromptSupplied"
+                },
+                {
+                    "type": "isCodeBlockSelected",
+                    "required": false
+                },
+                {
+                    "type": "isSupportedLanguage"
+                },
+                {
+                    "type": "jobGroup",
+                    "required": false
+                },
+                {
+                    "type": "jobId",
+                    "required": false
+                },
+                {
+                    "type": "perfClientLatency",
+                    "required": false
+                },
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "reasonDesc",
+                    "required": false
+                },
+                {
+                    "type": "result"
+                },
+                {
+                    "type": "status",
+                    "required": false
+                },
+                {
+                    "type": "update",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "amazonq_utgGenerateTests",
+            "description": "Client side invocation of the AmazonQ Unit Test Generation",
+            "metadata": [
+                {
+                    "type": "acceptedCharactersCount",
+                    "required": false
+                },
+                {
+                    "type": "acceptedCount",
+                    "required": false
+                },
+                {
+                    "type": "acceptedLinesCount",
+                    "required": false
+                },
+                {
+                    "type": "artifactsUploadDuration",
+                    "required": false
+                },
+                {
+                    "type": "buildPayloadBytes",
+                    "required": false
+                },
+                {
+                    "type": "buildZipFileBytes",
+                    "required": false
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "cwsprChatProgrammingLanguage"
+                },
+                {
+                    "type": "generatedCharactersCount",
+                    "required": false
+                },
+                {
+                    "type": "generatedCount",
+                    "required": false
+                },
+                {
+                    "type": "generatedLinesCount",
+                    "required": false
+                },
+                {
+                    "type": "hasUserPromptSupplied"
+                },
+                {
+                    "type": "isCodeBlockSelected",
+                    "required": false
+                },
+                {
+                    "type": "isFileInWorkspace"
+                },
+                {
+                    "type": "isSupportedLanguage"
+                },
+                {
+                    "type": "jobGroup",
+                    "required": false
+                },
+                {
+                    "type": "jobId",
+                    "required": false
+                },
+                {
+                    "type": "perfClientLatency",
+                    "required": false
+                },
+                {
+                    "type": "reason",
+                    "required": false
+                },
+                {
+                    "type": "reasonDesc",
+                    "required": false
+                },
+                {
+                    "type": "result"
+                },
+                {
+                    "type": "source",
+                    "required": false
+                },
+                {
+                    "type": "status",
                     "required": false
                 }
             ]
@@ -2252,6 +3519,32 @@
                 },
                 {
                     "type": "toolId",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "appbuilder_lambda2sam",
+            "description": "User click Convert a lambda function to SAM project",
+            "metadata": [
+                {
+                    "type": "action",
+                    "required": false
+                },
+                {
+                    "type": "iac",
+                    "required": false
+                },
+                {
+                    "type": "result",
+                    "required": false
+                },
+                {
+                    "type": "runtime",
+                    "required": false
+                },
+                {
+                    "type": "source",
                     "required": false
                 }
             ]
@@ -2673,7 +3966,19 @@
                     "required": true
                 },
                 {
+                    "type": "credentialSourceId",
+                    "required": false
+                },
+                {
                     "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "credentialType",
+                    "required": false
+                },
+                {
+                    "type": "featureId",
                     "required": false
                 },
                 {
@@ -2808,6 +4113,10 @@
             "description": "Extension navigated the user to a web browser to perform/complete the login process.",
             "metadata": [
                 {
+                    "type": "authType",
+                    "required": false
+                },
+                {
                     "type": "credentialSourceId",
                     "required": false
                 },
@@ -2829,6 +4138,10 @@
                 },
                 {
                     "type": "result"
+                },
+                {
+                    "type": "sessionDuration",
+                    "required": false
                 },
                 {
                     "type": "source"
@@ -3537,6 +4850,38 @@
             ]
         },
         {
+            "name": "cloudwatchlogs_startLiveTail",
+            "description": "When user starts a new LiveTail command",
+            "metadata": [
+                {
+                    "type": "filterType",
+                    "required": false
+                },
+                {
+                    "type": "hasTextFilter",
+                    "required": false
+                },
+                {
+                    "type": "sessionAlreadyStarted",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "cloudwatchlogs_stopLiveTail",
+            "description": "When user stops a liveTailSession",
+            "metadata": [
+                {
+                    "type": "source",
+                    "required": true
+                }
+            ]
+        },
+        {
             "name": "cloudwatchlogs_tailStream",
             "description": "Tail stream off/on",
             "metadata": [
@@ -3738,14 +5083,6 @@
                 {
                     "type": "codeTransformTotalByteSize",
                     "required": true
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
-                    "required": true
                 }
             ]
         },
@@ -3764,14 +5101,6 @@
                 {
                     "type": "codeTransformSessionId",
                     "required": true
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
-                    "required": false
                 }
             ]
         },
@@ -3786,14 +5115,6 @@
                 {
                     "type": "credentialSourceId",
                     "required": false
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
-                    "required": true
                 }
             ]
         },
@@ -3803,7 +5124,11 @@
             "metadata": [
                 {
                     "type": "codeTransformCancelSrcComponents",
-                    "required": true
+                    "required": false
+                },
+                {
+                    "type": "codeTransformJobId",
+                    "required": false
                 },
                 {
                     "type": "codeTransformRuntimeError",
@@ -3852,20 +5177,6 @@
             ]
         },
         {
-            "name": "codeTransform_jobIsStartedFromChatPrompt",
-            "description": "The user initiates a transform job from the Amazon Q chat prompt.",
-            "metadata": [
-                {
-                    "type": "codeTransformSessionId",
-                    "required": true
-                },
-                {
-                    "type": "credentialSourceId",
-                    "required": false
-                }
-            ]
-        },
-        {
             "name": "codeTransform_jobStart",
             "description": "Transform job started for uploaded project.",
             "metadata": [
@@ -3895,14 +5206,6 @@
                 },
                 {
                     "type": "credentialSourceId",
-                    "required": false
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
                     "required": false
                 },
                 {
@@ -3945,14 +5248,6 @@
                 {
                     "type": "codeTransformSessionId",
                     "required": true
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
-                    "required": true
                 }
             ]
         },
@@ -3967,10 +5262,6 @@
                 },
                 {
                     "type": "codeTransformSessionId",
-                    "required": true
-                },
-                {
-                    "type": "reason",
                     "required": true
                 }
             ]
@@ -3988,6 +5279,10 @@
                     "required": false
                 },
                 {
+                    "type": "codeTransformJobId",
+                    "required": false
+                },
+                {
                     "type": "codeTransformProjectId",
                     "required": false
                 },
@@ -3996,12 +5291,12 @@
                     "required": true
                 },
                 {
-                    "type": "reason",
+                    "type": "source",
                     "required": false
                 },
                 {
-                    "type": "result",
-                    "required": true
+                    "type": "target",
+                    "required": false
                 },
                 {
                     "type": "userChoice",
@@ -4053,6 +5348,10 @@
                     "required": true
                 },
                 {
+                    "type": "codeTransformJobId",
+                    "required": false
+                },
+                {
                     "type": "codeTransformRunTimeLatency",
                     "required": true
                 },
@@ -4062,14 +5361,6 @@
                 },
                 {
                     "type": "codeTransformTotalByteSize",
-                    "required": true
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
                     "required": true
                 }
             ]
@@ -4091,58 +5382,16 @@
                     "required": false
                 },
                 {
+                    "type": "codeTransformMetadata",
+                    "required": false
+                },
+                {
                     "type": "codeTransformPreValidationError",
                     "required": false
                 },
                 {
                     "type": "codeTransformSessionId",
                     "required": true
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
-                    "required": true
-                }
-            ]
-        },
-        {
-            "name": "codeTransform_viewArtifact",
-            "description": "User clicks to view downloaded artifact.",
-            "metadata": [
-                {
-                    "type": "codeTransformArtifactType",
-                    "required": true
-                },
-                {
-                    "type": "codeTransformJobId",
-                    "required": true
-                },
-                {
-                    "type": "codeTransformSessionId",
-                    "required": true
-                },
-                {
-                    "type": "codeTransformStatus",
-                    "required": true
-                },
-                {
-                    "type": "codeTransformVCSViewerSrcComponents",
-                    "required": true
-                },
-                {
-                    "type": "reason",
-                    "required": false
-                },
-                {
-                    "type": "result",
-                    "required": true
-                },
-                {
-                    "type": "userChoice",
-                    "required": false
                 }
             ]
         },
@@ -4267,9 +5516,31 @@
             "passive": true
         },
         {
+            "name": "codewhisperer_codeScanChatNewTab",
+            "description": "Called when a new chat tab is opened in the code scan view",
+            "metadata": [
+                {
+                    "type": "credentialSourceId",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "codewhisperer_codeScanIssueApplyFix",
             "description": "Called when a code scan issue suggested fix is applied",
             "metadata": [
+                {
+                    "type": "autoDetected",
+                    "required": false
+                },
+                {
+                    "type": "codeFixAction",
+                    "required": false
+                },
+                {
+                    "type": "codewhispererCodeScanJobId",
+                    "required": false
+                },
                 {
                     "type": "component"
                 },
@@ -4284,11 +5555,32 @@
                     "type": "findingId"
                 },
                 {
-                    "type": "reason",
+                    "type": "ruleId",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "codewhisperer_codeScanIssueDetected",
+            "description": "Called when a code scan issue is returned from the service",
+            "metadata": [
+                {
+                    "type": "autoDetected",
                     "required": false
                 },
                 {
-                    "type": "result"
+                    "type": "codewhispererCodeScanJobId",
+                    "required": false
+                },
+                {
+                    "type": "detectorId"
+                },
+                {
+                    "type": "findingId"
+                },
+                {
+                    "type": "includesFix",
+                    "required": false
                 },
                 {
                     "type": "ruleId",
@@ -4297,9 +5589,52 @@
             ]
         },
         {
+            "name": "codewhisperer_codeScanIssueGenerateFix",
+            "description": "Generated fix for a code scan issue. variant=refresh means the user chose to generate a fix again after one already exists.",
+            "metadata": [
+                {
+                    "type": "autoDetected",
+                    "required": false
+                },
+                {
+                    "type": "codewhispererCodeScanJobId",
+                    "required": false
+                },
+                {
+                    "type": "component"
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "detectorId"
+                },
+                {
+                    "type": "findingId"
+                },
+                {
+                    "type": "includesFix",
+                    "required": false
+                },
+                {
+                    "type": "ruleId",
+                    "required": false
+                },
+                {
+                    "type": "variant",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "codewhisperer_codeScanIssueHover",
             "description": "Called when a code scan issue is hovered over",
             "metadata": [
+                {
+                    "type": "autoDetected",
+                    "required": false
+                },
                 {
                     "type": "credentialStartUrl",
                     "required": false
@@ -4320,9 +5655,44 @@
             ]
         },
         {
+            "name": "codewhisperer_codeScanIssueIgnore",
+            "description": "User ignored a code scan issue. variant=all means the user ignored all issues of a specific type.",
+            "metadata": [
+                {
+                    "type": "autoDetected",
+                    "required": false
+                },
+                {
+                    "type": "component"
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "detectorId"
+                },
+                {
+                    "type": "findingId"
+                },
+                {
+                    "type": "ruleId",
+                    "required": false
+                },
+                {
+                    "type": "variant",
+                    "required": false
+                }
+            ]
+        },
+        {
             "name": "codewhisperer_codeScanIssueViewDetails",
             "description": "Called when a code scan issue webview is opened",
             "metadata": [
+                {
+                    "type": "autoDetected",
+                    "required": false
+                },
                 {
                     "type": "credentialStartUrl",
                     "required": false
@@ -4472,6 +5842,10 @@
                 },
                 {
                     "type": "result"
+                },
+                {
+                    "type": "source",
+                    "required": false
                 }
             ]
         },
@@ -5736,6 +7110,21 @@
             ]
         },
         {
+            "name": "lambda_createServerlessLandProject",
+            "description": "Called when creating a new Serverless Project",
+            "metadata": [
+                {
+                    "type": "iac"
+                },
+                {
+                    "type": "runtimeString"
+                },
+                {
+                    "type": "templateName"
+                }
+            ]
+        },
+        {
             "name": "lambda_delete",
             "description": "called when deleting lambdas remotely",
             "unit": "None",
@@ -5904,6 +7293,30 @@
             ]
         },
         {
+            "name": "lambda_quickDeploy",
+            "description": "Lambda function was deployed from temp",
+            "metadata": [
+                {
+                    "type": "action",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "lambda_quickEditFunction",
+            "description": "Lambda function edit operation",
+            "metadata": [
+                {
+                    "type": "action",
+                    "required": false
+                },
+                {
+                    "type": "source",
+                    "required": true
+                }
+            ]
+        },
+        {
             "name": "lambda_updateFunctionCode",
             "description": "Called when updating a Lambda function's code outside the context of a SAM template",
             "metadata": [
@@ -5913,6 +7326,43 @@
                 {
                     "type": "runtime",
                     "required": false
+                }
+            ]
+        },
+        {
+            "name": "lambda_uriHandler",
+            "description": "Lambda URI handler was invoked"
+        },
+        {
+            "name": "languageServer_setup",
+            "description": "Sets up a language server",
+            "passive": true,
+            "unit": "Milliseconds",
+            "metadata": [
+                {
+                    "type": "id"
+                },
+                {
+                    "type": "languageServerLocation",
+                    "required": false
+                },
+                {
+                    "type": "languageServerSetupStage"
+                },
+                {
+                    "type": "languageServerVersion",
+                    "required": false
+                },
+                {
+                    "type": "manifestLocation",
+                    "required": false
+                },
+                {
+                    "type": "manifestSchemaVersion",
+                    "required": false
+                },
+                {
+                    "type": "result"
                 }
             ]
         },
@@ -6627,12 +8077,39 @@
             ]
         },
         {
-            "name": "toolkit_closeModule",
-            "description": "The user closed 'something' (specified by 'module'). Examples: a view, feature, resource, ...",
+            "name": "toolkit_didCloseModule",
+            "description": "The module has closed/terminated. Use this when the module is done being used.",
             "metadata": [
                 {
                     "type": "module",
                     "required": true
+                }
+            ],
+            "passive": true
+        },
+        {
+            "name": "toolkit_didLoadModule",
+            "description": "The module has loaded, i.e it has rendered/resolved/finished. You can use this metric by itself, OR after `toolkit_willOpenModule` + `traceId` to close the loop on an asynchronous operation.",
+            "metadata": [
+                {
+                    "type": "attempts",
+                    "required": false
+                },
+                {
+                    "type": "duration",
+                    "required": false
+                },
+                {
+                    "type": "module",
+                    "required": true
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "version",
+                    "required": false
                 }
             ],
             "passive": true
@@ -6703,33 +8180,6 @@
             "passive": true
         },
         {
-            "name": "toolkit_initModule",
-            "description": "The Toolkit has completed initialization for the specified module.",
-            "metadata": [
-                {
-                    "type": "attempts",
-                    "required": false
-                },
-                {
-                    "type": "duration",
-                    "required": false
-                },
-                {
-                    "type": "module",
-                    "required": true
-                },
-                {
-                    "type": "result",
-                    "required": true
-                },
-                {
-                    "type": "version",
-                    "required": false
-                }
-            ],
-            "passive": true
-        },
-        {
             "name": "toolkit_invokeAction",
             "description": "User invoked an action. `source` is the notification that produced the action",
             "metadata": [
@@ -6760,27 +8210,8 @@
             ]
         },
         {
-            "name": "toolkit_openModule",
-            "description": "The user opened 'something' (specified by 'module'). Examples: a view, feature, resource, ...",
-            "metadata": [
-                {
-                    "type": "module",
-                    "required": true
-                },
-                {
-                    "type": "result",
-                    "required": true
-                },
-                {
-                    "type": "source",
-                    "required": true
-                }
-            ],
-            "passive": true
-        },
-        {
             "name": "toolkit_showAction",
-            "description": "The toolkit tried to show an action. Source represents the notification that produced the action",
+            "description": "Toolkit presented an action. `source` is the notification that produced the action. See also `toolkit_showNotification`.",
             "metadata": [
                 {
                     "type": "component",
@@ -6807,7 +8238,7 @@
         },
         {
             "name": "toolkit_showNotification",
-            "description": "The toolkit tried to show a notification message",
+            "description": "Show a notification message, optionally with selected action set in `userChoice`. See also `toolkit_showAction`.",
             "metadata": [
                 {
                     "type": "component",
@@ -6824,13 +8255,58 @@
                 {
                     "type": "result",
                     "required": true
+                },
+                {
+                    "type": "userChoice",
+                    "required": false
                 }
             ],
             "passive": true
         },
         {
+            "name": "toolkit_trackScenario",
+            "description": "Generic metric for tracking arbitrary scenarios that are not yet formalized into a full metric.",
+            "unit": "Count",
+            "metadata": [
+                {
+                    "type": "amazonqConversationId",
+                    "required": true
+                },
+                {
+                    "type": "count"
+                },
+                {
+                    "type": "credentialStartUrl",
+                    "required": false
+                },
+                {
+                    "type": "scenario",
+                    "required": true
+                }
+            ]
+        },
+        {
             "name": "toolkit_viewLogs",
             "description": "View logs for the toolkit"
+        },
+        {
+            "name": "toolkit_willOpenModule",
+            "description": "Indicates a module opening attempt began, not its successful completion. For load confirmation, use `toolkit_didLoadModule` with matching `traceId`. This separation handles asynchronous processes that can't be captured in a single metric. 'Module' refers to components like views, features, resources, etc.",
+            "metadata": [
+                {
+                    "type": "module",
+                    "required": true
+                },
+                {
+                    "type": "result",
+                    "required": true
+                },
+                {
+                    "type": "source",
+                    "required": true
+                }
+            ],
+            "passive": true
         },
         {
             "name": "ui_click",
